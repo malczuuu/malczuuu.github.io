@@ -53,18 +53,16 @@ See [the project's repository][problem4j].
 
 [problem4j]: https://github.com/malczuuu/problem4j
 
-### Silhouette
+### Micro Shadow
 
 A simple IoT device shadow application, powered by Spring Boot and RabbitMQ. Explores the flow
 of [Device State Replica][replica] pattern of IoT communication over MQTT topics.
 
-According to Google, _silhouette_ is a synonym for the word _shadow_.
-
-See [the project's repository][silhouette].
+See [the project's repository][ushadow].
 
 [replica]: https://iotatlas.net/en/patterns/device_state_replica/
 
-[silhouette]: https://github.com/malczuuu/silhouette
+[ushadow]: [https://github.com/malczuuu/silhouette](https://github.com/malczuuu/ushadow)
 
 ### Multi-tenant Articles
 
