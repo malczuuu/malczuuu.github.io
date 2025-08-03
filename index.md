@@ -4,13 +4,14 @@
 
 - [Overview](#overview)
 - [Projects](#projects)
+    - [uiot](#uiot)
     - [Taskbook](#taskbook)
     - [Problem4j](#problem4j)
     - [Micro Shadow](#micro-shadow)
     - [iEmu](#iemu)
     - [Multi-tenant Articles](#multi-tenant-articles)
 - [Tools](#tools)
-    - [Prototypes with Docker Compose](#prototypes-with-docker-compose)
+    - [Docker Compose Prototypes](#docker-compose-prototypes)
 
 ## Overview
 
@@ -21,9 +22,24 @@ This website provides a summary of my after hours programming activities.
 Below is the list of personal projects. Most of these were brought to life as a form of learning
 something new or as a proof of concept.
 
+### uIoT
+
+**Pronounced: _"micro IoT"_.**
+
+A prototype of an IoT Telemetry system, presenting microservices communication over Apache Kafka
+and REST API, developed with Spring Boot. The system is composed of loosely coupled services
+responsible for device management, telemetry processing (RabbitMQ powered), basic rules, and
+historical data access.
+
+Project also focused on exploring good practices in software architecture and development.
+
+See [the project's repository][uiot].
+
+[uiot]: https://github.com/malczuuu/uiot
+
 ### Taskbook
 
-A simple issue-tracker application, developed with Spring Boot and Angular frameworks at college. 
+A simple issue-tracker application, developed with Spring Boot and Angular frameworks at college.
 After finalization, this project is being used as a testing tool for what's new in next versions
 of these frameworks.
 
@@ -31,7 +47,7 @@ See [the project's website][taskbook].
 
 [taskbook]: https://malczuuu.github.io/taskbook
 
-### Problem4j
+### Problem4J
 
 A Java library implementing [RFC7807](https://tools.ietf.org/html/rfc7807). Integrates with Spring
 Boot to provide responses in form of `application/problem+json` documents.
@@ -97,12 +113,8 @@ See [the project's website][articles-app].
 
 ## Tools
 
-### Prototypes with Docker Compose
+### Docker Compose Prototypes
 
 List of prototypes of `docker-compose.yaml` setups of various services for personal development.
 
-- [`keycloak-compose`](https://github.com/malczuuu/keycloak-compose)
-- [`mongo-compose`](https://github.com/malczuuu/mongo-compose)
-- [`portainer-compose`](https://github.com/malczuuu/portainer-compose)
-- [`rabbitmq-compose`](https://github.com/malczuuu/rabbitmq-compose)
-- [`traefik-compose`](https://github.com/malczuuu/traefik-compose)
+- [`composes`](https://github.com/malczuuu/composes)
