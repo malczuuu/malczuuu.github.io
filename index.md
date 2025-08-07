@@ -9,7 +9,6 @@
     - [Problem4j](#problem4j)
     - [Micro Shadow](#micro-shadow)
     - [iEmu](#iemu)
-    - [Multi-tenant Articles](#multi-tenant-articles)
 - [Tools](#tools)
     - [Docker Compose Prototypes](#docker-compose-prototypes)
 
@@ -94,22 +93,6 @@ See [the project's repository][iemu].
 [leshan-demo-server]: https://leshan.eclipseprojects.io/
 
 [iemu]: https://github.com/malczuuu/iemu
-
-### Multi-tenant Articles
-
-A simple application for exploring multi-tenancy concepts.
-
-Application gives the users a personal space for writing articles (quite simple CRUD application).
-The application however is available from three different domains, each integrated with different
-Keycloak realm. This creates a multi-tenant environment, where each tenant has its own set of users
-and the application resources.
-
-The most useful part of this project (and possibly reusable in the future) was creation of a
-multi-realm Keycloak installation, defined in `docker-compose.yaml` file.
-
-See [the project's website][articles-app].
-
-[articles-app]: https://malczuuu.github.io/articles-app
 
 ## Tools
 
