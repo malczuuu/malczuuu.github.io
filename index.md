@@ -100,4 +100,6 @@ See [the project's repository][iemu].
 
 List of prototypes of `docker-compose.yaml` setups of various services for personal development.
 
-- [`composes`](https://github.com/malczuuu/composes)
+See [`composes` project's repository][composes].
+
+[composes]: https://github.com/malczuuu/composes
