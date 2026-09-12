@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://malczuuu.github.io/modelmaker-v1.0.schema.json",
+  "title": "ModelMaker Simple Schema v1.0",
+  "description": "Describes a ModelMaker Simple Schema file: one immutable Java DTO per file.",
+  "type": "object",
+  "required": ["$modelmaker", "title", "type", "properties"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional reference to this meta-schema. Ignored by ModelMaker."
+    },
+    "$modelmaker": {
+      "description": "Schema format version.",
+      "const": "v1.0"
+    },
+    "title": {
+      "type": "string",
+      "description": "Fully-qualified class name. The file must be named <title>.json.",
+      "pattern": "^[a-zA-Z_$][a-zA-Z\\d_$]*(\\.[a-zA-Z_$][a-zA-Z\\d_$]*)+$"
+    },
+    "type": {
+      "description": "Always \"object\" at the top level.",
+      "const": "object"
+    },
+    "description": {
+      "type": "string",
+      "description": "Emitted as @Schema(description = ...) on the class when the openApi feature is on."
+    },
+    "required": {
+      "type": "array",
+      "description": "Property names that must always be set. Everything else is @Nullable.",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "properties": { "$ref": "#/$defs/properties" },
+    "features": { "$ref": "#/$defs/features" }
+  },
+  "$defs": {
+    "properties": {
+      "type": "object",
+      "description": "Property name to property schema.",
+      "propertyNames": {
+        "description": "camelCase, snake_case or UpperCamelCase, optionally prefixed with underscores.",
+        "pattern": "^_*([a-z][a-zA-Z\\d]*|[a-z][a-z\\d]*(_[a-z\\d]+)*|[A-Z][a-zA-Z\\d]*)$"
+      },
+      "additionalProperties": { "$ref": "#/$defs/property" }
+    },
+    "property": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "oneOf": [{ "required": ["type"] }, { "required": ["$ref"] }],
+      "properties": {
+        "type": {
+          "description": "The property's kind.",
+          "enum": ["string", "bytes", "integer", "number", "boolean", "object", "array"]
+        },
+        "$ref": {
+          "type": "string",
+          "description": "Another schema's title, a nested type name, or a java.*/javax.* type."
+        },
+        "description": {
+          "type": "string",
+          "description": "Emitted as @Schema(description = ...) when the openApi feature is on."
+        },
+        "example": {
+          "type": ["string", "number", "integer", "boolean"],
+          "description": "Emitted as @Schema(example = \"...\"), always rendered as a string."
+        },
+        "sensitive": {
+          "type": "boolean",
+          "description": "Masks the value as *** in the generated toString(). Getters, equals and hashCode are unaffected.",
+          "default": false
+        },
+        "default": {
+          "description": "Value applied when an optional property is left unset. Not supported for bytes, object or $ref."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "string" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "format": {
+                "type": "string",
+                "description": "Adds @Email for \"email\"; the others add the matching @Pattern. An unknown value is ignored.",
+                "examples": ["email", "uuid", "date", "time", "date-time", "decimal"]
+              },
+              "pattern": { "type": "string", "description": "Emitted as @Pattern; wins over enum and format." },
+              "enum": {
+                "type": "array",
+                "description": "Emitted as a @Pattern alternation. Does not produce a Java enum.",
+                "items": { "type": "string" },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "minLength": { "type": "integer", "minimum": 0, "description": "Emitted as @Size(min = ...)." },
+              "maxLength": { "type": "integer", "minimum": 0, "description": "Emitted as @Size(max = ...)." },
+              "minimum": { "type": "number", "description": "With format \"decimal\", emitted as @DecimalMin." },
+              "maximum": { "type": "number", "description": "With format \"decimal\", emitted as @DecimalMax." },
+              "default": { "type": "string" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "integer" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "format": {
+                "description": "\"int\" renders Integer/int, \"long\" renders Long/long.",
+                "enum": ["int", "long"],
+                "default": "int"
+              },
+              "minimum": { "type": "integer", "description": "Emitted as @Min." },
+              "maximum": { "type": "integer", "description": "Emitted as @Max." },
+              "default": { "type": "integer" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "number" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "format": {
+                "description": "\"double\" renders Double/double, \"float\" renders Float/float.",
+                "enum": ["double", "float"],
+                "default": "double"
+              },
+              "minimum": { "type": "number", "description": "Emitted as @DecimalMin." },
+              "maximum": { "type": "number", "description": "Emitted as @DecimalMax." },
+              "default": { "type": "number" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "boolean" } }, "required": ["type"] },
+          "then": { "properties": { "default": { "type": "boolean" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "object" } }, "required": ["type"] },
+          "then": {
+            "required": ["properties"],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Names the inline nested class. Plain class name, no package.",
+                "pattern": "^[A-Z][a-zA-Z\\d]*$"
+              },
+              "required": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+              "properties": { "$ref": "#/$defs/properties" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "array" } }, "required": ["type"] },
+          "then": {
+            "required": ["items"],
+            "properties": {
+              "items": {
+                "description": "The element schema. Arrays of arrays are not supported.",
+                "$ref": "#/$defs/property"
+              },
+              "minItems": { "type": "integer", "minimum": 0, "description": "Emitted as @Size(min = ...) on the List." },
+              "maxItems": { "type": "integer", "minimum": 0, "description": "Emitted as @Size(max = ...) on the List." },
+              "default": { "type": "array" }
+            }
+          }
+        }
+      ]
+    },
+    "features": {
+      "type": "object",
+      "description": "Per-file override of the project-wide modelmaker { features { } } defaults.",
+      "additionalProperties": false,
+      "properties": {
+        "jackson": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "annotateFields": { "type": "boolean" },
+            "annotateGetters": { "type": "boolean" },
+            "includeNonNull": {
+              "type": "boolean",
+              "description": "Emits @JsonInclude(JsonInclude.Include.NON_NULL) on the class."
+            }
+          }
+        },
+        "validation": { "$ref": "#/$defs/annotationFeature" },
+        "openApi": { "$ref": "#/$defs/annotationFeature" },
+        "withers": { "$ref": "#/$defs/toggleFeature" },
+        "preferPrimitives": { "$ref": "#/$defs/toggleFeature" }
+      }
+    },
+    "annotationFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "annotateFields": { "type": "boolean" },
+        "annotateGetters": { "type": "boolean" }
+      }
+    },
+    "toggleFeature": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "enabled": { "type": "boolean" } }
+    }
+  }
+}
